@@ -1,0 +1,12 @@
+[Unit]
+Description=Elasticsearch stats exporter for Prometheus
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/sysconfig/prom-elasticsearch-exporter
+ExecStart=/usr/bin/prom-elasticsearch-exporter $ELASTICSEARCH_EXPORTER_OPTS
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+Alias=prom-elasticsearch-exporter.service
