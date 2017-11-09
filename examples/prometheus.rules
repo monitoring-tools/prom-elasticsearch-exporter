@@ -1,0 +1,53 @@
+# This file contains aggregation rules for prom-elasticSearch-exporter
+#
+# Dashboards:
+# examples/elasticsearch-consolidated.json
+# examples/elasticsearch-index.json
+# examples/elasticsearch-node.json
+
+elasticsearch:overall_cluster:rps:rate1m = avg(sum(rate(elasticsearch_indices_search_query_total{}[1m])) by (job, cluster)) by (job, cluster)
+
+# Cluster-level aggregations
+# -------------------------------------------------------------------------
+
+elasticsearch:cluster:search_query_seconds:avg = sum(rate(elasticsearch_index_total_search_query_time_seconds{}[1m])) by (job, cluster, instance) / sum(rate(elasticsearch_index_total_search_query_total[1m])) by (job, cluster, instance)
+elasticsearch:cluster:indexing_time_seconds:avg = sum(rate(elasticsearch_index_total_indexing_index_seconds_total{}[1m])) by (job, cluster, instance) / sum(rate(elasticsearch_index_total_indexing_index_total{}[1m])) by (job, cluster, instance)
+
+elasticsearch:cluster:thread_pool:active_total = sum(elasticsearch_thread_pool_active_count{}) by (job, cluster, instance, type)
+elasticsearch:cluster:thread_pool:completed:rate1m = sum(rate(elasticsearch_thread_pool_completed_count{}[1m])) by (job, cluster, instance, type)
+elasticsearch:cluster:thread_pool:largest_total = max(elasticsearch_thread_pool_largest_count{}) by (job, cluster, instance, type)
+elasticsearch:cluster:thread_pool:queued_total = sum(elasticsearch_thread_pool_queue_count{}) by (job, cluster, instance, type)
+elasticsearch:cluster:thread_pool:rejected:increase1m = sum(increase(elasticsearch_thread_pool_rejected_count{}[1m])) by (job, cluster, instance, type)
+elasticsearch:cluster:thread_pool:threads:top10 = topk(10, elasticsearch_thread_pool_threads_count{})
+
+elasticsearch:cluster:translog_operations:rate1m = sum(rate(elasticsearch_node_indices_translog_operations{}[1m])) by (job, cluster, instance)
+elasticsearch:cluster:translog_size_bytes = sum(elasticsearch_node_indices_translog_size_in_bytes{}) by (job, cluster, instance)
+
+
+# Index-level aggregations
+# -------------------------------------------------------------------------
+
+elasticsearch:index:search_query:rate1m = rate(elasticsearch_index_total_search_query_total{}[1m])
+elasticsearch:index:search_query_seconds:avg = sum(rate(elasticsearch_index_primaries_search_query_time_seconds{}[1m])) by (job, cluster, instance, index) / sum(rate(elasticsearch_index_total_search_query_total{}[1m])) by (job, cluster, instance, index)
+elasticsearch:index:indexing_total:rate1m = rate(elasticsearch_index_total_indexing_index_total{}[1m])
+elasticsearch:index:indexing_primaries:rate1m = rate(elasticsearch_index_primaries_indexing_index_total{}[1m])
+elasticsearch:index:indexing_time_seconds:avg = sum(rate(elasticsearch_index_total_indexing_index_seconds_total{}[1m])) by (job, cluster, instance, index) / sum(rate(elasticsearch_index_total_indexing_index_total{}[1m])) by (job, cluster, instance, index)
+elasticsearch:index:refresh_time_total_seconds:avg = rate(elasticsearch_index_total_refresh_time_seconds{}[1m]) / rate(elasticsearch_index_total_refresh_total{}[1m])
+elasticsearch:index:refresh_time_primaries_seconds:avg = rate(elasticsearch_index_primaries_refresh_seconds_total{}[1m]) / rate(elasticsearch_index_primaries_refresh_total{}[1m])
+elasticsearch:index:throttle_time_total_seconds:avg = rate(elasticsearch_index_total_indexing_throttle_seconds_total{}[1m]) / rate(elasticsearch_index_total_indexing_index_total{}[1m])
+elasticsearch:index:throttle_time_primaries_seconds:avg = rate(elasticsearch_index_primaries_indexing_throttle_seconds_total{}[1m]) / rate(elasticsearch_index_total_indexing_index_total{}[1m])
+
+# Node-level aggregations
+# -------------------------------------------------------------------------
+
+elasticsearch:node:jvm:runs:increase1m = increase(elasticsearch_jvm_gc_collection_seconds_count{gc="young"}[1m])
+elasticsearch:node:jvm:seconds:increase1m = increase(elasticsearch_jvm_gc_collection_seconds_sum{gc="young"}[1m])
+elasticsearch:node:jvm:memory_committed:increase1m = increase(elasticsearch_jvm_memory_heap_committed_bytes{}[1m])
+
+elasticsearch:node:indexing_total:rate1m = rate(elasticsearch_node_indices_indexing_index_total{}[1m])
+elasticsearch:node:search_query:rate1m = rate(elasticsearch_node_indices_search_query_total{}[1m])
+elasticsearch:node:refresh_time_total_seconds:avg = rate(elasticsearch_node_indices_refresh_time_seconds_total{}[1m]) / rate(elasticsearch_node_indices_refresh_total{}[1m])
+elasticsearch:node:search_query:rate1m = rate(elasticsearch_node_indices_search_query_total{}[1m])
+elasticsearch:node:search_query_seconds:avg = rate(elasticsearch_node_indices_search_query_time_seconds{}[1m]) / rate(elasticsearch_node_indices_search_query_total{}[1m])
+elasticsearch:node:indexing_total:rate1m = rate(elasticsearch_node_indices_indexing_index_total{}[1m])
+elasticsearch:node:indexing_time_seconds:avg = rate(elasticsearch_node_indices_indexing_index_time_seconds_total{}[1m]) / rate(elasticsearch_node_indices_indexing_index_total{}[1m])

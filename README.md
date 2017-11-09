@@ -54,10 +54,14 @@ prom-elasticsearch-exporter --help
 | es.client-private-key | Path to PEM file that contains the private key for client auth when connecting to Elasticsearch.
 | es.client-cert        | Path to PEM file that contains the corresponding cert for the private key to connect to Elasticsearch.
 
-### Resources
+### Grafana dashboards
 
-- [Prometheus recording rules](examples/prometheus.rules)
-- [Grafana dashboard](examples/grafana-dashboard.json)
+To use this dashboards you need to set up following Prometheus [aggregation rules](examples/prometheus.rules).
+
+Dashboards:
+- [Cluster](examples/grafana-dashboard-cluster.json)
+- [Index](examples/grafana-dashboard-index.json)
+- [Node](examples/grafana-dashboard-node.json)
 
 ## License
 
