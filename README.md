@@ -1,4 +1,4 @@
-Prometheus exporter for various metrics about ElasticSearch, written in Go.
+# Prometheus exporter for ElasticSearch
 
 ### Installation
 
