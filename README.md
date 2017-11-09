@@ -9,8 +9,8 @@ You can find here: https://github.com/monitoring-tools/prom-elasticsearch-export
 #### Docker
 
 ```bash
-docker pull monitoring-tools/prom-elasticsearch-exporter:latest
-docker run --rm -p 9108:9108 monitoring-tools/prom-elasticsearch-exporter:latest
+docker pull montools/prom-elasticsearch-exporter
+docker run --rm -p 9108:9108 montools/prom-elasticsearch-exporter:latest
 ```
 
 ### Build
