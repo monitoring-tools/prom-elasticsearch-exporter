@@ -1,4 +1,5 @@
 # Prometheus exporter for ElasticSearch
+[![Build Status](https://travis-ci.org/monitoring-tools/prom-elasticsearch-exporter.svg?branch=master)](https://travis-ci.org/monitoring-tools/prom-elasticsearch-exporter)
 
 ### Installation
 
