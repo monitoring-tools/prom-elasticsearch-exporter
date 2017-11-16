@@ -35,7 +35,7 @@ make build
 
 ```bash
 make docker
-docker run -d -p 9108:9108 --name=prom-elasticsearch-exporter monitoring-tools/prom-elasticsearch-exporter:1.0.0 --es.uri="http://localhost.iddc:9200/"
+docker run -d -p 9108:9108 --name=prom-elasticsearch-exporter monitoring-tools/prom-elasticsearch-exporter:1.1.0 --es.uri="http://localhost:9200/"
 ```
 
 ### Configuration

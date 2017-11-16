@@ -32,7 +32,7 @@ The commands & flags are:
   --web.listen-address      address to listen on for web interface and telemetry. Default - :9108
   --web.telemetry-path      path under which to expose metrics. Default - /metrics
   --es.timeout              timeout for trying to get stats from ElasticSearch. Default - 5s
-  --es.uri                  ElasticSearch URI. You can provide multiple hosts: --es.uri=host1 --es.uri=host2
+  --es.uri                  ElasticSearch node URI. Default - http://localhost:9200
   --es.all                  export stats for all nodes in the cluster. Default - false
   --es.ca                   path to PEM file that conains trusted CAs for the ElasticSearch connection
   --es.client-private-key   path to PEM file that conains the private key for client auth when connecting to ElasticSearch
@@ -48,25 +48,18 @@ var (
 
 func main() {
 	var (
-		listenAddress      = flag.String("web.listen-address", ":9108", "Address to listen on for web interface and telemetry.")
-		metricsPath        = flag.String("web.telemetry-path", "/metrics", "Path under which to expose metrics.")
-		esTimeout          = flag.Duration("es.timeout", 5*time.Second, "Timeout for trying to get stats from ElasticSearch.")
-		esAllNodes         = flag.Bool("es.all", false, "Export stats for all nodes in the cluster.")
-		esCA               = flag.String("es.ca", "", "Path to PEM file that conains trusted CAs for the ElasticSearch connection.")
-		esClientPrivateKey = flag.String("es.client-private-key", "", "Path to PEM file that conains the private key for client auth when connecting to ElasticSearch.")
-		esClientCert       = flag.String("es.client-cert", "", "Path to PEM file that conains the corresponding cert for the private key to connect to ElasticSearch.")
-
-		esURI stringSliceValue
+		listenAddress      = flag.String("web.listen-address", ":9108", "Address to listen on for web interface and telemetry")
+		metricsPath        = flag.String("web.telemetry-path", "/metrics", "Path under which to expose metrics")
+		esTimeout          = flag.Duration("es.timeout", 5*time.Second, "Timeout for trying to get stats from ElasticSearch")
+		esURI              = flag.String("es.uri", "http://localhost:9200", "HTTP API address of an Elasticsearch node")
+		esAllNodes         = flag.Bool("es.all", false, "Export stats for all nodes in the cluster")
+		esCA               = flag.String("es.ca", "", "Path to PEM file that conains trusted CAs for the ElasticSearch connection")
+		esClientPrivateKey = flag.String("es.client-private-key", "", "Path to PEM file that conains the private key for client auth when connecting to ElasticSearch")
+		esClientCert       = flag.String("es.client-cert", "", "Path to PEM file that conains the corresponding cert for the private key to connect to ElasticSearch")
 	)
-
-	flag.Var(&esURI, "es.uri", "HTTP API address of an Elasticsearch node.")
 
 	flag.Usage = func() { printUsage() }
 	flag.Parse()
-
-	if len(esURI) == 0 {
-		esURI = stringSliceValue([]string{"http://localhost:9200"})
-	}
 
 	args := flag.Args()
 
@@ -95,7 +88,7 @@ func main() {
 
 	decoratedClient := httpclient.Decorate(
 		httpClient,
-		decorator.BaseURLDecorator([]string(esURI)),
+		decorator.BaseURLDecorator(*esURI),
 		decorator.RecoverDecorator(), // better to place it last to recover panics from decorators too
 	)
 
@@ -135,20 +128,6 @@ func IndexHandler(metricsPath string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Write(index)
 	}
-}
-
-// stringSliceValue is a value used for array of string flags
-type stringSliceValue []string
-
-// String returns stringified representation of string slice
-func (s *stringSliceValue) String() string {
-	return fmt.Sprintf("%v", *s)
-}
-
-// Set sets the flag value
-func (s *stringSliceValue) Set(value string) error {
-	*s = append(*s, value)
-	return nil
 }
 
 // formatListenAddr returns formatted UNIX addr
