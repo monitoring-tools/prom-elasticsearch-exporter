@@ -143,7 +143,7 @@ func (s *TestRequestBuilderSuite) TestBody(c *C) {
 }
 
 func (s *TestRequestBuilderSuite) TestReturns(c *C) {
-	client := NewClient()
+	client := NewClientMock()
 	builder := NewPromiseBuilder(client)
 	builder.WillReturn(200, "some response")
 
@@ -160,7 +160,7 @@ func (s *TestRequestBuilderSuite) TestReturns(c *C) {
 func (s *TestRequestBuilderSuite) TestReturnsResponse(c *C) {
 	response := &http.Response{StatusCode: 200, Body: &closer{strings.NewReader("some response")}}
 
-	client := NewClient()
+	client := NewClientMock()
 	builder := NewPromiseBuilder(client)
 	builder.WillReturnResponse(response)
 

@@ -42,7 +42,7 @@ type clusterHealthStatusMetric struct {
 
 // Collector is an cluster health metrics collector
 type Collector struct {
-	esClient elasticsearch.IClient
+	esClient elasticsearch.Client
 
 	metrics        []*clusterHealthMetric
 	statusMetric   *clusterHealthStatusMetric
@@ -64,7 +64,7 @@ func newIndexHealthMetric(name, help string, valueExtractor func(model.ClusterHe
 }
 
 // NewCollector returns new cluster health collector
-func NewCollector(esClient elasticsearch.IClient) *Collector {
+func NewCollector(esClient elasticsearch.Client) *Collector {
 	return &Collector{
 		esClient: esClient,
 

@@ -299,3 +299,10 @@ type NodeFSData struct {
 	DiskReadSize  int64  `json:"disk_read_size_in_bytes"`
 	DiskWriteSize int64  `json:"disk_write_size_in_bytes"`
 }
+
+// Tasks is a representation of ElasticSearch cluster tasks statistics
+type Tasks []struct {
+	Action      string `json:"action"`
+	RunningTime string `json:"running_time"`
+	Node        string `json:"node"`
+}

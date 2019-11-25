@@ -17,7 +17,7 @@ type Promise struct {
 
 // PromiseBuilder helper for creating rules with fluent interface
 type PromiseBuilder struct {
-	client   *Client
+	client   *ClientMock
 	checkers []CheckerFunc
 }
 
@@ -57,7 +57,7 @@ func (c closer) Close() error {
 
 // NewPromiseBuilder constructor for ruleBuilder.
 // all created constrains are registered in client
-func NewPromiseBuilder(client *Client) *PromiseBuilder {
+func NewPromiseBuilder(client *ClientMock) *PromiseBuilder {
 	return &PromiseBuilder{
 		client:   client,
 		checkers: make([]CheckerFunc, 0),

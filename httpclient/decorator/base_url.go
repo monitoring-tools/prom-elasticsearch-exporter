@@ -15,7 +15,7 @@ func BaseURLDecorator(baseURL string) httpclient.DecoratorFunc {
 		panic(err)
 	}
 
-	return func(c httpclient.IClient) httpclient.IClient {
+	return func(c httpclient.Client) httpclient.Client {
 		return httpclient.ClientFunc(func(r *http.Request) (res *http.Response, err error) {
 			reqCopy := new(http.Request)
 			*reqCopy = *r

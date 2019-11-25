@@ -59,7 +59,7 @@ type filesystemMetric struct {
 
 // Collector is an node metrics collector
 type Collector struct {
-	esClient                 elasticsearch.IClient
+	esClient                 elasticsearch.Client
 	exportMetricsForAllNodes bool
 
 	nodeMetrics         []*nodeMetric
@@ -126,7 +126,7 @@ func newBreakerMetric(t prometheus.ValueType, name, help string, valueExtractor 
 }
 
 // NewCollector returns new nodes metrics collector
-func NewCollector(esClient elasticsearch.IClient, exportMetricsForAllNodes bool) *Collector {
+func NewCollector(esClient elasticsearch.Client, exportMetricsForAllNodes bool) *Collector {
 	return &Collector{
 		esClient:                 esClient,
 		exportMetricsForAllNodes: exportMetricsForAllNodes,

@@ -8,7 +8,7 @@ import (
 )
 
 func (s *TestSuite) TestPanicDecorator(c *C) {
-	panicTriggerDecorator := func(c httpclient.IClient) httpclient.IClient {
+	panicTriggerDecorator := func(c httpclient.Client) httpclient.Client {
 		return httpclient.ClientFunc(func(r *http.Request) (res *http.Response, err error) {
 			panic("oops")
 		})

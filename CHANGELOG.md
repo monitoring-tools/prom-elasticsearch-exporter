@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2019-11-26
+### Added
+- Tasks running time metrics added 
+
 ## [1.1.0] - 2017-11-16
 ### Added
 - CHANGELOG.md file was added

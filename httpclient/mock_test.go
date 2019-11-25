@@ -33,7 +33,7 @@ func (s *TestSuite) writeHeaders(headers http.Header) string {
 }
 
 func (s *TestSuite) builder() *PromiseBuilder {
-	return NewPromiseBuilder(NewClient())
+	return NewPromiseBuilder(NewClientMock())
 }
 
 func (s *TestSuite) newRequest(method, path string, body io.Reader) *http.Request {
