@@ -15,7 +15,7 @@ var (
 
 // Collector is a metrics collection with ElasticSearch indices stats
 type Collector struct {
-	esClient elasticsearch.IClient
+	esClient elasticsearch.Client
 
 	totalMetrics     []*indexMetric
 	primariesMetrics []*indexMetric
@@ -45,7 +45,7 @@ func newIndexMetric(t prometheus.ValueType, name, help string, valueExtractor fu
 }
 
 // NewCollector returns new metrics collection for indices metrics
-func NewCollector(esClient elasticsearch.IClient) *Collector {
+func NewCollector(esClient elasticsearch.Client) *Collector {
 	var indexMetricTemplates = []*indexMetricTemplate{
 		newIndexMetric(
 			prometheus.GaugeValue, "docs_count", "Docs count",

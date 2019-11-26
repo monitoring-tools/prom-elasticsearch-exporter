@@ -54,14 +54,14 @@ var recoveryShardInfo = metrics.NewDesc(
 
 // Collector is a metrics collection for ElasticSearch indices aliases
 type Collector struct {
-	esClient elasticsearch.IClient
+	esClient elasticsearch.Client
 
 	recoveryInfo prometheus.Metric
 	metrics      []*recoveryMetric
 }
 
 // NewCollector returns new metrics collection for indices aliases
-func NewCollector(esClient elasticsearch.IClient) *Collector {
+func NewCollector(esClient elasticsearch.Client) *Collector {
 	return &Collector{
 		esClient: esClient,
 		metrics: []*recoveryMetric{

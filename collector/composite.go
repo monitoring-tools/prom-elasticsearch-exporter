@@ -10,6 +10,7 @@ import (
 	"github.com/monitoring-tools/prom-elasticsearch-exporter/collector/internal"
 	"github.com/monitoring-tools/prom-elasticsearch-exporter/collector/nodes"
 	"github.com/monitoring-tools/prom-elasticsearch-exporter/collector/recovery"
+	"github.com/monitoring-tools/prom-elasticsearch-exporter/collector/tasks"
 	"github.com/monitoring-tools/prom-elasticsearch-exporter/elasticsearch"
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -23,12 +24,12 @@ type ICollector interface {
 // CompositeCollector collects all ES metrics: cluster, nodes, indices.
 // Implements prometheus.Collector
 type CompositeCollector struct {
-	esClient   elasticsearch.IClient
+	esClient   elasticsearch.Client
 	collectors []ICollector
 }
 
 // NewCompositeCollector creates new composite collector
-func NewCompositeCollector(esClient elasticsearch.IClient, exportMetricsForAllNodes bool, appVersion, goVersion, gitBranch string) *CompositeCollector {
+func NewCompositeCollector(esClient elasticsearch.Client, exportMetricsForAllNodes bool, appVersion, goVersion, gitBranch string) *CompositeCollector {
 	collectors := []ICollector{
 		internal.NewCollector(appVersion, goVersion, gitBranch),
 		clusterhealth.NewCollector(esClient),
@@ -36,6 +37,7 @@ func NewCompositeCollector(esClient elasticsearch.IClient, exportMetricsForAllNo
 		aliases.NewCollector(esClient),
 		indices.NewCollector(esClient),
 		recovery.NewCollector(esClient),
+		tasks.NewCollector(esClient),
 	}
 
 	return &CompositeCollector{

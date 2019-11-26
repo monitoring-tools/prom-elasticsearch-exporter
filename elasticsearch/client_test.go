@@ -9,7 +9,7 @@ import (
 )
 
 func TestClient_Aliases_Ok(t *testing.T) {
-	mockHTTPClient := httpclient.NewClient()
+	mockHTTPClient := httpclient.NewClientMock()
 	mockHTTPClient.Get("/_aliases").WillReturn(200, testdata.AliasesBody)
 
 	esClient := NewClient(mockHTTPClient)
@@ -24,7 +24,7 @@ func TestClient_Aliases_Ok(t *testing.T) {
 }
 
 func TestClient_Aliases_Error(t *testing.T) {
-	mockHTTPClient := httpclient.NewClient()
+	mockHTTPClient := httpclient.NewClientMock()
 	mockHTTPClient.Get("/_aliases").WillReturn(500, ``)
 
 	esClient := NewClient(mockHTTPClient)
@@ -36,7 +36,7 @@ func TestClient_Aliases_Error(t *testing.T) {
 }
 
 func TestClient_ClusterHealth_Ok(t *testing.T) {
-	mockHTTPClient := httpclient.NewClient()
+	mockHTTPClient := httpclient.NewClientMock()
 	mockHTTPClient.Get("/_cluster/health?level=indices").WillReturn(200, testdata.ClusterHealthIndicesBody)
 
 	esClient := NewClient(mockHTTPClient)
@@ -52,7 +52,7 @@ func TestClient_ClusterHealth_Ok(t *testing.T) {
 }
 
 func TestClient_ClusterHealth_Error(t *testing.T) {
-	mockHTTPClient := httpclient.NewClient()
+	mockHTTPClient := httpclient.NewClientMock()
 	mockHTTPClient.Get("/_cluster/health?level=cluster").WillReturn(500, ``)
 
 	esClient := NewClient(mockHTTPClient)
@@ -64,7 +64,7 @@ func TestClient_ClusterHealth_Error(t *testing.T) {
 }
 
 func TestClient_NodesAll_Ok(t *testing.T) {
-	mockHTTPClient := httpclient.NewClient()
+	mockHTTPClient := httpclient.NewClientMock()
 	mockHTTPClient.Get("/_nodes/stats").WillReturn(200, testdata.NodesBody)
 
 	esClient := NewClient(mockHTTPClient)
@@ -80,7 +80,7 @@ func TestClient_NodesAll_Ok(t *testing.T) {
 }
 
 func TestClient_NodesAll_Error(t *testing.T) {
-	mockHTTPClient := httpclient.NewClient()
+	mockHTTPClient := httpclient.NewClientMock()
 	mockHTTPClient.Get("/_nodes/stats").WillReturn(500, ``)
 
 	esClient := NewClient(mockHTTPClient)
@@ -92,7 +92,7 @@ func TestClient_NodesAll_Error(t *testing.T) {
 }
 
 func TestClient_NodesSelf_Ok(t *testing.T) {
-	mockHTTPClient := httpclient.NewClient()
+	mockHTTPClient := httpclient.NewClientMock()
 	mockHTTPClient.Get("/_nodes/_local/stats").WillReturn(200, testdata.NodesBody)
 
 	esClient := NewClient(mockHTTPClient)
@@ -104,7 +104,7 @@ func TestClient_NodesSelf_Ok(t *testing.T) {
 }
 
 func TestClient_Recovery_Ok(t *testing.T) {
-	mockHTTPClient := httpclient.NewClient()
+	mockHTTPClient := httpclient.NewClientMock()
 	mockHTTPClient.Get("/_recovery?active_only=true").WillReturn(200, testdata.RecoveryBody)
 
 	esClient := NewClient(mockHTTPClient)

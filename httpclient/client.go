@@ -2,8 +2,8 @@ package httpclient
 
 import "net/http"
 
-// IClient sends http.Requests and returns http.Responses or errors in  case of failure.
-type IClient interface {
+// Client sends http.Requests and returns http.Responses or errors in  case of failure.
+type Client interface {
 	Do(*http.Request) (*http.Response, error)
 }
 
@@ -16,10 +16,10 @@ func (f ClientFunc) Do(r *http.Request) (*http.Response, error) {
 }
 
 // DecoratorFunc wraps a Client with extra behaviour.
-type DecoratorFunc func(IClient) IClient
+type DecoratorFunc func(Client) Client
 
 // Decorate decorates a Client c with all the given Decorators, in order.
-func Decorate(c IClient, ds ...DecoratorFunc) IClient {
+func Decorate(c Client, ds ...DecoratorFunc) Client {
 	result := c
 	for _, decorate := range ds {
 		result = decorate(result)

@@ -10,13 +10,13 @@ import (
 
 // Collector is a metrics collection for ElasticSearch indices aliases
 type Collector struct {
-	esClient elasticsearch.IClient
+	esClient elasticsearch.Client
 
 	metrics []*metrics.Metric
 }
 
 // NewCollector returns new metrics collector for index aliases
-func NewCollector(esClient elasticsearch.IClient) *Collector {
+func NewCollector(esClient elasticsearch.Client) *Collector {
 	return &Collector{
 		esClient: esClient,
 		metrics: []*metrics.Metric{

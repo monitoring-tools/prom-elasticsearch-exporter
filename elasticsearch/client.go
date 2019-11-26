@@ -17,33 +17,34 @@ const (
 	LevelShards  clusterHealthLevel = "shards"
 )
 
-// IClient is an ElasticSearch client interface
-type IClient interface {
+// Client is an ElasticSearch client interface
+type Client interface {
 	ClusterHealth(level clusterHealthLevel) (*model.ClusterHealth, error)
 	Aliases() (model.Aliases, error)
 	Indices() (*model.Indices, error)
 	Nodes(fetchAllNodesInfo bool) (*model.Nodes, error)
 	Recovery() (model.Recovery, error)
+	Tasks() (*model.Tasks, error)
 }
 
 var (
-	_ IClient = &Client{}
+	_ Client = &ESClient{}
 )
 
 // NewClient returns new client
-func NewClient(httpClient httpclient.IClient) *Client {
-	return &Client{
+func NewClient(httpClient httpclient.Client) *ESClient {
+	return &ESClient{
 		httpClient: httpClient,
 	}
 }
 
 // Client is an ElasticSearch client implementation
-type Client struct {
-	httpClient httpclient.IClient
+type ESClient struct {
+	httpClient httpclient.Client
 }
 
 // ClusterHealth returns ES cluster health info
-func (c *Client) ClusterHealth(level clusterHealthLevel) (*model.ClusterHealth, error) {
+func (c *ESClient) ClusterHealth(level clusterHealthLevel) (*model.ClusterHealth, error) {
 	var v model.ClusterHealth
 	if err := c.makeRequest("/_cluster/health?level="+string(level), &v); err != nil {
 		return nil, err
@@ -53,7 +54,7 @@ func (c *Client) ClusterHealth(level clusterHealthLevel) (*model.ClusterHealth, 
 }
 
 // Aliases returns ES index aliases info
-func (c *Client) Aliases() (model.Aliases, error) {
+func (c *ESClient) Aliases() (model.Aliases, error) {
 	var v model.Aliases
 	if err := c.makeRequest("/_aliases", &v); err != nil {
 		return nil, err
@@ -63,7 +64,7 @@ func (c *Client) Aliases() (model.Aliases, error) {
 }
 
 // Indices returns ES indices info
-func (c *Client) Indices() (*model.Indices, error) {
+func (c *ESClient) Indices() (*model.Indices, error) {
 	var v model.Indices
 	if err := c.makeRequest("/_stats", &v); err != nil {
 		return nil, err
@@ -73,7 +74,7 @@ func (c *Client) Indices() (*model.Indices, error) {
 }
 
 // Nodes returns ES nodes info
-func (c *Client) Nodes(fetchAllNodesInfo bool) (*model.Nodes, error) {
+func (c *ESClient) Nodes(fetchAllNodesInfo bool) (*model.Nodes, error) {
 	path := "/_nodes/_local/stats"
 	if fetchAllNodesInfo {
 		path = "/_nodes/stats"
@@ -87,8 +88,20 @@ func (c *Client) Nodes(fetchAllNodesInfo bool) (*model.Nodes, error) {
 	return &v, nil
 }
 
+// Tasks returns ES tasks info
+func (c *ESClient) Tasks() (*model.Tasks, error) {
+	path := "/_cat/tasks?format=json"
+
+	var v model.Tasks
+	if err := c.makeRequest(path, &v); err != nil {
+		return nil, err
+	}
+
+	return &v, nil
+}
+
 // Recovery returns ES state with currently active recovery operations
-func (c *Client) Recovery() (model.Recovery, error) {
+func (c *ESClient) Recovery() (model.Recovery, error) {
 	var v model.Recovery
 	path := "/_recovery?active_only=true"
 
@@ -100,7 +113,7 @@ func (c *Client) Recovery() (model.Recovery, error) {
 }
 
 // makeRequest sends request and encodes it to given struct
-func (c *Client) makeRequest(path string, v interface{}) error {
+func (c *ESClient) makeRequest(path string, v interface{}) error {
 	req, err := http.NewRequest("GET", path, nil)
 	if err != nil {
 		return err

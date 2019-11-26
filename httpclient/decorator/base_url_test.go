@@ -9,7 +9,7 @@ import (
 )
 
 func (s *TestSuite) TestBaseURLDecorator(c *C) {
-	baseURLCheckerDecorator := func(client httpclient.IClient) httpclient.IClient {
+	baseURLCheckerDecorator := func(client httpclient.Client) httpclient.Client {
 		return httpclient.ClientFunc(func(r *http.Request) (res *http.Response, err error) {
 			c.Assert(r.URL.Host, Equals, "my-host")
 			c.Assert(r.URL.Scheme, Equals, "https")
