@@ -165,6 +165,14 @@ func NewCollector(esClient elasticsearch.Client, exportMetricsForAllNodes bool) 
 				func(n model.Node) float64 { return float64(n.Indices.RequestCache.Evictions) },
 			),
 			newNodeIndexMetric(
+				prometheus.CounterValue, "request_cache_miss_count", "Miss count from request cache",
+				func(n model.Node) float64 { return float64(n.Indices.RequestCache.MissCount) },
+			),
+			newNodeIndexMetric(
+				prometheus.CounterValue, "request_cache_hit_count", "Hit count from request cache",
+				func(n model.Node) float64 { return float64(n.Indices.RequestCache.HitCount) },
+			),
+			newNodeIndexMetric(
 				prometheus.CounterValue, "translog_operations", "Total translog operations",
 				func(n model.Node) float64 { return float64(n.Indices.Translog.Operations) },
 			),

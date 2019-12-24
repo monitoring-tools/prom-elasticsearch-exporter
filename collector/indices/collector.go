@@ -112,6 +112,14 @@ func NewCollector(esClient elasticsearch.Client) *Collector {
 			func(i model.IndexSummary) float64 { return float64(i.RequestCache.Evictions) },
 		),
 		newIndexMetric(
+			prometheus.CounterValue, "request_cache_miss_count", "Miss count from request cache",
+			func(i model.IndexSummary) float64 { return float64(i.RequestCache.MissCount) },
+		),
+		newIndexMetric(
+			prometheus.CounterValue, "request_cache_hit_count", "Hit count from request cache",
+			func(i model.IndexSummary) float64 { return float64(i.RequestCache.HitCount) },
+		),
+		newIndexMetric(
 			prometheus.GaugeValue, "fielddata_memory_size_bytes", "Fielddata memory usage in bytes",
 			func(i model.IndexSummary) float64 { return float64(i.Fielddata.MemorySizeInBytes) },
 		),
