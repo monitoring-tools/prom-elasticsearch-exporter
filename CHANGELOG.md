@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2019-12-24
+### Added
+- Nodes and indices requests cache hit and miss count 
+
 ## [1.2.0] - 2019-11-26
 ### Added
 - Tasks running time metrics added 
