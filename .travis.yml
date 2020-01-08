@@ -1,4 +1,26 @@
+dist: bionic
 language: go
-
+notifications:
+  email: false
 go:
-  - 1.13
+  - "1.13.x"
+arch: amd64
+before_deploy:
+  - GOOS=linux TARGET=linux-amd64 make build
+  - shasum -a 256 linux-amd64 > linux-amd64.sha256
+  - GOOS=darwin TARGET=darwin-amd64 make build
+  - shasum -a 256 darwin-amd64 > darwin-amd64.sha256
+deploy:
+  provider: releases
+  api_key:
+    secure: H54hUojjubXflbp9RpaSi1rvdOYDqmODmA/WYC9h5gz0YeSF/YUQuf7w8TBwSfZ6xqReCitSQBKKbnXm+4ENrUXYSXTrNbvaCAGd06x/FBCB+M7jqkuJilLJ+YE6KkySccD+GFnEkx+5X2+zu2far9PFkuYZr0drrRb8fyl4z9qoYHuxkiQ/UmBIbU78QpjjCl+jIiPWsyn3+a2lW3PS/8m5EVLq6H/j5AFfihO2W35bOCL4Cq9ifz3wQ0TwFBkAS52yfFmpJVZgc1ZlCsdU0/vBk5VLWJLQuibobaXu71QTUDQ11gqTnsLRQcU6eQnNBRwxX48ExTY5bB7W/Cpwcx5qxBKrGTVfqEM+OZN4KK5EMVT0EeqvxNt3Ng9KyT7aJt7gZGosNKteR/sKHh+rUxAK9Y/KR3VI3IROJ/y5W0iOiyZpR99vrQ4pWkVeAnRHrKRx2T1Wg+/BP4jTTsH7nmoQHa0Zd1VfHT731opLvesvBLOzmEjOtN8HlLMKL7wS1oJVQCbKKSqegApkmpvY6mVJC2LX9XaCp4zZRg7BRiOsizMtj4jSPVmB3cNHwZeEfLTA5Ta5QHAWzZKTJ7Ptvw88KjEkPvCNZnzaIPjO+zgSIHWmozC3JudPb3PMfEZkfb3RxCHHQvnIUQuTETnNldtzVWXvWjwjE7EAbfGmHVw=
+  file:
+    - linux-amd64
+    - linux-amd64.sha256
+    - darwin-amd64
+    - darwin-amd64.sha256
+  skip_cleanup: true
+  on:
+    repo: monitoring-tools/prom-elasticsearch-exporter
+    branch: master
+    tags: true

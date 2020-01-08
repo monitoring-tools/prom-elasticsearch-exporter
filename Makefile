@@ -1,4 +1,4 @@
-TARGET              := prom-elasticsearch-exporter
+TARGET              ?= prom-elasticsearch-exporter
 
 GOPATH              := $(lastword $(subst :, ,$(GOPATH)))
 GIT_SUMMARY         := $(shell git describe --tags --dirty --always)
