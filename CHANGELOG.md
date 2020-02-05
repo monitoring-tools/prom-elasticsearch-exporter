@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2020-01-05
+### Changed
+- Metric "task" was renamed to "task_group_duration_seconds".
+### Added
+- Label "cluster" to "task_group_duration_seconds" metric.
+
 ## [1.2.1] - 2019-12-24
 ### Added
 - Nodes and indices requests cache hit and miss count 
