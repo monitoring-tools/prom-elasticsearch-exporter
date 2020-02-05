@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.2.2] - 2020-01-05
 ### Changed
-- Metric "task" was renamed to "task_group_duration_seconds".
+- Metric "tasks" was renamed to "task_group_duration_seconds".
 ### Added
 - Label "cluster" to "task_group_duration_seconds" metric.
 
