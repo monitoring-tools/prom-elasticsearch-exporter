@@ -5,20 +5,20 @@ import (
 	"strings"
 	"time"
 
-	"github.com/prometheus/client_golang/prometheus"
 	"github.com/monitoring-tools/prom-elasticsearch-exporter/elasticsearch"
 	"github.com/monitoring-tools/prom-elasticsearch-exporter/metrics"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 // Labels lists for different kind of metrics
 var (
-	labelsTasks = []string{"action", "node"}
+	labelsTasks = []string{"action", "node", "cluster"}
 )
 
 // Label values extractors for different kind of metrics
 var (
-	labelValuesTasks = func(action string, host string) []string {
-		return []string{action, host}
+	labelValuesTasks = func(action, host, cluster string) []string {
+		return []string{action, host, cluster}
 	}
 )
 
@@ -51,7 +51,7 @@ func NewCollector(esClient elasticsearch.Client) *Collector {
 	return &Collector{
 		esClient: esClient,
 		taskMetric: newTaskMetric(
-			prometheus.GaugeValue, "tasks", "Task running time in seconds`",
+			prometheus.GaugeValue, "task_group_duration_seconds", "Task group running duration in seconds",
 			func(t float64) float64 { return t },
 		),
 		maxTasks: make(map[string]max),
@@ -97,7 +97,7 @@ func (c *Collector) Collect(clusterName string, ch chan<- prometheus.Metric) {
 			c.taskMetric.Desc(),
 			c.taskMetric.Type(),
 			c.taskMetric.Value(max.time),
-			labelValuesTasks(task.Action, task.Node)...,
+			labelValuesTasks(task.Action, task.Node, clusterName)...,
 		)
 	}
 }
